@@ -20,12 +20,23 @@ RTMeshHandler::~RTMeshHandler()
 
 void RTMeshHandler::generateMesh()
 {
-	FRealtimeMeshSimpleMeshData meshData;
-	generateChunkMeshData(meshData,0,0);
-	FRealtimeMeshSectionKey StaticSectionKey = realtimeMesh->CreateMeshSection(0, FRealtimeMeshSectionConfig(ERealtimeMeshSectionDrawType::Static, 0), meshData, true);
+	int chunkOffsetY = scaleY * (chunkHeight -1 );
+	int chunkOffsetX = scaleX * (chunkWidht -1) ;
+
+
+	for (int y = 0; y < chunkRows; y++)
+	{
+		for (int x = 0; x < chunkCols; x++)
+		{
+			FRealtimeMeshSimpleMeshData meshData;
+			generateChunkMeshData(meshData, x * chunkOffsetX,y * chunkOffsetY);
+			FRealtimeMeshSectionKey StaticSectionKey = realtimeMesh->CreateMeshSection(0, FRealtimeMeshSectionConfig(ERealtimeMeshSectionDrawType::Static, 0), meshData, true);
+		}
+
+	}
+			
 
 }
-
 void RTMeshHandler::registerMesh()
 {
 	
@@ -40,7 +51,7 @@ void RTMeshHandler::generateChunkMeshData(FRealtimeMeshSimpleMeshData& meshData,
 	//GenerateTriangles(triangles, chunkWidht, chunkHeight);
 	//
 
-	GenerateVerticesAndTriangles(vertices, triangles, chunkWidht, chunkHeight, scaleX, scaleY, 0);
+	GenerateVerticesAndTriangles(vertices, triangles, chunkWidht, chunkHeight, scaleX, scaleY, chunkIndexX, chunkIndexY);
 	meshData.Positions = vertices;
 	meshData.Triangles = triangles;
 
